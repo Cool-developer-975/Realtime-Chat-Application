@@ -1,0 +1,1 @@
+async function s(t,a){try{const e=await fetch(`/${a?"login":"signup"}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(t)}),o=await e.json();if(e.ok){const{userName:r}=o;window.location.href=`/userpage?userName=${r}`}else throw new Error(`${o.error}`)}catch(e){alert(e.message)}}export{s as p};

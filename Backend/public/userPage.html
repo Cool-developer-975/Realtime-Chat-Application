@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real time chatting application</title>
+  <script type="module" crossorigin src="./assets/main-Owbq64ZT.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main--iAQXr23.css">
+</head>
+<body>
+    <button id="create-btn">Create a new Group</button>
+    <button id="join-btn">Join a Group</button>
+    <script>
+        const createBtn = document.querySelector("#create-btn");
+        const joinBtn = document.querySelector("#join-btn");
+
+        createBtn.addEventListener("click",(e)=>{
+            window.location.href = `/createRoom`;
+        });
+        joinBtn.addEventListener("click",(e)=>{
+            window.location.href = `/joinRoom`;
+        });
+    </script>
+</body>
+</html>
