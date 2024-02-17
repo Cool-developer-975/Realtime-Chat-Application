@@ -1,1 +1,0 @@
-import"./main-Owbq64ZT.js";import{p as o}from"./postData-DPwz7xSG.js";const s=document.querySelector("#btn");s.addEventListener("click",e=>{e.preventDefault();const t=document.querySelector("#username").value,r=document.querySelector("#password").value;o({userName:t,password:r},!0)});

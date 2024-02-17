@@ -5,5 +5,10 @@ const btn = document.querySelector("#btn");
         e.preventDefault();
         const userName = document.querySelector("#username").value;
         const password = document.querySelector("#password").value;
-        postData({"userName": userName, "password":password}, true);
+        if(userName.length > 0 && password.length > 0){
+          postData({"userName": userName, "password":password}, true);
+        }
+        else{
+          alert("Enter valid values");
+        }
 });
