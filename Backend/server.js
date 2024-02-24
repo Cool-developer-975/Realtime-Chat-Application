@@ -12,6 +12,9 @@ const db = require("./db");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 
+
+//routes
+
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -24,12 +27,54 @@ app.get("/signup", (req, res) => {
     res.sendFile(path.join(__dirname, "public/signup.html"));
 });
 
-app.get("/joinRoom", (req, res) => {
+app.get("/joinGroup", (req, res) => {
     res.sendFile(path.join(__dirname, "public/joinRoom.html"));
 });
 
-app.get("/createRoom", (req, res) => {
+app.get("/createGroup", (req, res) => {
     res.sendFile(path.join(__dirname, "public/createRoom.html"));
+});
+
+app.post("/joinGroup/jgrp", async (req, res)=>{
+    const obj = req.body;
+    const response = await db.joinGroup(obj);
+    if(response === "success"){
+        res.status(200).json({ "userName": obj.userName });
+    }
+    else if(response === "Group_name or password is incorrect"){
+        res.status(401).json({error: response});
+    }
+    else if(response === "Error"){
+        res.status(401).json({error: "Something went wrong"});
+    }
+    else{
+        res.status(401).json({error: "Something went wrong"});
+    }
+});
+
+app.post("/createGroup/cgrp", async(req, res)=>{
+    const obj = req.body;
+    const response = await db.createGroup(obj);
+    if(response === "group created successfully"){
+        console.log("group created successfully");
+        res.status(200).json({success:true});
+    }
+    else if(response === "Group already exists"){
+        res.status(401).json({error: response});
+    }
+    else if(response === "Group name or password not provided"){
+        res.status(401).json({error: response});
+    }
+    else if(response === "failed to create new group"){
+        res.status(400).json({error: response});
+    }
+    else{
+        res.status(400).json({error: "Something went wrong"});
+    }
+});
+
+app.get("/group", (req, res)=>{
+    res.sendFile(path.join(__dirname, "public","chat.html"));
 });
 
 app.post("/login", async (req, res) => {
@@ -71,9 +116,20 @@ app.post("/signup", async (req, res) => {
 
 //websockets
 
-io.on("connection", () => {
+io.on("connection", (socket) => {
+    
     console.log("One user connected");
+    
+    socket.on("user-info",(groupName)=>{
+        socket.join(groupName);
+    });
+
+    socket.on("outgoing-msg", (obj)=>{
+        socket.to(obj.groupName).emit("incomming-msg",obj);
+    });
+
 });
+
 
 server.listen(port, () => {
     console.log(`Server started on http://localhost:${port}/`);

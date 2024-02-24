@@ -4,21 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real time chatting application</title>
-  <script type="module" crossorigin src="./assets/main-Owbq64ZT.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/main--iAQXr23.css">
+  <script type="module" crossorigin src="./assets/main-bO7efQIr.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-rGQsXlnp.css">
 </head>
-<body>
-    <button id="create-btn">Create a new Group</button>
-    <button id="join-btn">Join a Group</button>
+<body class="min-h-screen w-full flex justify-center items-center">
+    <div class="h-[90%] w-[60%] max-w-[600px] flex flex-col space-y-10 px-5 py-5">
+        <button id="create-btn" class="block bg-blue-600 text-white px-4 py-2 rounded-md">Create a new Group</button>
+        <button id="join-btn" class="block bg-blue-600 text-white px-4 py-2 rounded-md">Join a Group</button>
+    </div>
     <script>
         const createBtn = document.querySelector("#create-btn");
         const joinBtn = document.querySelector("#join-btn");
-
+        const userName = window.location.href.split("?")[1].split("=")[1];
+        console.log(userName);
         createBtn.addEventListener("click",(e)=>{
-            window.location.href = `/createRoom`;
+            window.location.href = `/createGroup?userName=${userName}`;
         });
         joinBtn.addEventListener("click",(e)=>{
-            window.location.href = `/joinRoom`;
+            window.location.href = `/joinGroup?userName=${userName}`;
         });
     </script>
 </body>

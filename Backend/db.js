@@ -22,7 +22,7 @@ async function addUser(obj){
             return "username or email already exists";
         }
         else if(err.code === "23502"){
-            return "Record not provided";
+            return "username or email not provided";
         }
         else{
             return "Failed to add user";
@@ -36,8 +36,9 @@ async function addUser(obj){
 async function userLogin(obj){
     let client;
     try {
+        const {userName, password} = obj;
         client = await pool.connect();
-        const res = await client.query(`select * from users where username = $1 and password = $2;`,[obj.userName, obj.password]);
+        const res = await client.query(`select * from users where username = $1 and password = $2;`,[userName, password]);
         if(res.rowCount > 0){
             return true;
         }
@@ -53,12 +54,81 @@ async function userLogin(obj){
     }
 }
 
+
+async function createGroup(obj){
+    let client = null;
+
+    try {
+        client = await pool.connect();
+        
+        const{groupName, password} = obj;
+
+        const result = await client.query(`insert into groups values($1 , $2)`,[ groupName, password]);
+
+        if(result.rowCount > 0){
+            return "group created successfully";
+        }
+        console.log("failed to create new group");
+        return "failed to create new group";
+
+    } catch (error) {
+        if(error.code === "23505"){
+            return "Group already exists";
+        }
+        else if(error.code === "23502"){
+            return "Group name or password not provided";
+        }
+        else{
+            return "failed to create new group";
+        }
+    }
+    finally{
+        client.release();
+    }
+}
+
+async function joinGroup(obj){
+    let client = null;
+
+    try {
+        
+        client = await pool.connect();
+        
+        const {groupName, password} = obj;
+
+        const result = await client.query(`select group_name, password from groups where group_name = $1 and password = $2`,[groupName, password]);
+
+        if(result.rowCount === 1){
+            return "success";
+        }
+        else{
+            return "Group_name or password is incorrect";
+        }
+    } catch (error) {
+        console.log(error);
+        return "Error";
+    }
+    finally{
+        client.release();
+    }
+}
+
 async function test(){
-    const res = await userLogin({userName: "Ameya kawade",password:"Ameya"});
-    const res1 = await userLogin({userName: "Ameyakawade",password:"Ameya"});
-    console.log(res,res1);
+    const res = await joinGroup( {groupName : "OR 1=1; --", password : "OR '1'='1'; --"} );
+    const res1 = await joinGroup( {groupName : "PCP2", password : "ppcp2"} );
+    console.log(res);
+    console.log(res1);
+}
+
+async function display(tableName){
+    let client  = await pool.connect();
+    let result = await client.query(`select * from ${tableName}`);
+    console.log(result.rows);
 }
 
 // test();
 
-module.exports = {addUser, userLogin};
+// display("users");
+// display("groups");
+
+module.exports = {addUser, userLogin, createGroup, joinGroup};

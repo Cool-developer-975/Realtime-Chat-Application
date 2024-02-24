@@ -13,11 +13,12 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'public/index.html'),
         signup: resolve(__dirname, 'public/signup.html'),
-        chat:resolve(__dirname, 'public/chat.html'),
         room:resolve(__dirname,'public/userpage.html'),
+        chat:resolve(__dirname,'public/chat.html'),
         joinRoom:resolve(__dirname,'public/joinRoom.html'),
         createRoom:resolve(__dirname,'public/createRoom.html'),
       },
+      external:["/socket.io/socket.io.js"]
     },
   },
   plugins:[
@@ -31,6 +32,6 @@ export default defineConfig({
         }),
       ]
     })
-  ]
+  ],
 });
 
