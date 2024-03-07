@@ -64,9 +64,7 @@ exitBtn.addEventListener("click",(e)=>{
     }
 });
 
-btn.addEventListener("click", ()=>{
-    console.log("btn called");
-});
+btn.addEventListener("click", sendMsg);
 
 input.addEventListener("keydown",(e)=>{
     console.log("called");
