@@ -4,21 +4,45 @@ const userName = arr[1].split("=")[1];
 document.querySelector("#heading").textContent = groupName;
 const chatBox = document.querySelector("#chatbox");
 const btn = document.querySelector("#btn");
+const input = document.querySelector("#msg");
+const typingEl = document.querySelector("#typing");
+const exitBtn = document.querySelector("#exit-btn");
+const OnlineCountEl = document.querySelector("#online-cnt");
+let isTyping = false;
 
-
+console.log(OnlineCountEl);
 //socket io
+
 
 const socket = io();
 socket.connect();
-socket.emit("user-info", groupName);
-
+socket.emit("user-info", groupName, (response)=>{
+    OnlineCountEl.textContent = `Online : ${response.cnt}`;
+});
+socket.on("update-cnt",(response)=>{
+     OnlineCountEl.textContent = `Online : ${response.cnt}`;
+});
 socket.on("incomming-msg",(obj)=>{
     addMsg(obj,false);
 });
 
+socket.on("left",(obj)=>{
+    OnlineCountEl.textContent = `Online : ${obj.cnt}`;
+});
 
-btn.addEventListener("click", (e)=>{
-    const input = document.querySelector("#msg");
+socket.on("someone-typing",(obj)=>{
+    if(!isTyping){
+        isTyping = true;
+        typingEl.textContent = `${obj.userName} is typing....`;
+        setTimeout(()=>{
+            typingEl.textContent = "";
+            isTyping = false;
+        },3000);
+    }
+});
+
+
+const sendMsg = ()=>{
     const msg = input.value.trim();
     input.value = "";
     if(msg.length > 0){
@@ -30,9 +54,34 @@ btn.addEventListener("click", (e)=>{
         addMsg(obj,true);
         socket.emit("outgoing-msg", obj);
     }
-    else{
-        alert("cannot send empty message");
+};
+
+
+exitBtn.addEventListener("click",(e)=>{
+    if(socket.emit("leaving",{userName:userName, groupName:groupName})){
+        socket.disconnect();
+        window.location.href = `/userpage?userName=${userName}`;
     }
+});
+
+btn.addEventListener("click", ()=>{
+    console.log("btn called");
+});
+
+input.addEventListener("keydown",(e)=>{
+    console.log("called");
+    if(e.key === "Enter"){
+        console.log("from");
+        sendMsg();
+    }
+});
+
+input.addEventListener("input",(e)=>{
+    const obj = {
+        userName:userName,
+        groupName:groupName
+    };
+    socket.emit("typing",obj);
 });
 
 

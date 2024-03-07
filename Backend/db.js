@@ -18,6 +18,7 @@ async function addUser(obj){
 
         return "Added user successfully"
     } catch (err) {
+        console.log(err);
         if(err.code === "23505"){
             return "username or email already exists";
         }
@@ -72,6 +73,7 @@ async function createGroup(obj){
         return "failed to create new group";
 
     } catch (error) {
+        console.log(error);
         if(error.code === "23505"){
             return "Group already exists";
         }
@@ -124,6 +126,7 @@ async function display(tableName){
     let client  = await pool.connect();
     let result = await client.query(`select * from ${tableName}`);
     console.log(result.rows);
+    client.release();
 }
 
 // test();

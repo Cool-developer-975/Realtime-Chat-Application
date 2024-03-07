@@ -1,1 +1,0 @@
-import"./main-bO7efQIr.js";import{p as s}from"./postData-k9C_udXj.js";const a=document.querySelector("#btn");a.addEventListener("click",r=>{r.preventDefault();const e=document.querySelector("#username").value,t=document.querySelector("#password").value;e.length>0&&t.length>0?s({userName:e,password:t},!0):alert("Enter valid values")});

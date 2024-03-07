@@ -1,13 +1,18 @@
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const bodyParser = require("body-parser");
 const app = express();
-const { createServer } = require("http");
-const server = createServer(app);
+const { createServer } = require("https");
+const server = createServer({
+    key: fs.readFileSync(path.join(__dirname,"cert","key.pem")),
+    cert: fs.readFileSync(path.join(__dirname,"cert","cert.pem"))
+},app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const port = 3000;
 const db = require("./db");
+let groups = new Map();
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
@@ -119,18 +124,42 @@ app.post("/signup", async (req, res) => {
 io.on("connection", (socket) => {
     
     console.log("One user connected");
-    
-    socket.on("user-info",(groupName)=>{
+
+    socket.on("user-info",(groupName, callback)=>{
         socket.join(groupName);
+        if(groups.has(groupName)){
+            groups.set(groupName, groups.get(groupName) + 1);
+        }
+        else{
+            groups.set(groupName, 1);
+        }
+        let cnt = groups.get(groupName);
+        io.to(groupName).emit("update-cnt",{cnt: cnt});
+        callback({cnt : cnt});
     });
 
     socket.on("outgoing-msg", (obj)=>{
         socket.to(obj.groupName).emit("incomming-msg",obj);
     });
 
+    socket.on("typing",(obj)=>{
+        socket.to(obj.groupName).emit("someone-typing",obj);
+    });
+
+    socket.on("leaving",(obj)=>{
+        groups.set(obj.groupName, groups.get(obj.groupName) - 1);
+        if(groups.get(obj.groupName) === 0){
+            groups.delete(obj.groupName);
+        }
+        else{
+            io.to(obj.groupName).emit("left",{userName : obj.userName, cnt : groups.get(obj.groupName)});
+        }
+    });
+
+
 });
 
 
 server.listen(port, () => {
-    console.log(`Server started on http://localhost:${port}/`);
+    console.log(`Server started on https://localhost:${port}/`);
 });

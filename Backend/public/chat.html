@@ -4,17 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real time chatting application</title>
-  <script type="module" crossorigin src="./assets/chat-MdvVDtpx.js"></script>
-  <link rel="modulepreload" crossorigin href="./assets/main-bO7efQIr.js">
-  <link rel="stylesheet" crossorigin href="./assets/main-rGQsXlnp.css">
+  <script type="module" crossorigin src="./assets/chat-voNSdZNg.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/main-Kb4lVJGq.js">
+  <link rel="stylesheet" crossorigin href="./assets/main-mqwz9Thp.css">
 </head>
-<body>
+<body class="pt-2">
     
     <div class="bg-gray-100 h-screen flex flex-col  max-w-5xl mx-auto">
         
         <!-- Header -->
-        <div class="bg-blue-500 p-4 text-white text-2xl flex justify-center items-center" id="heading">
-            
+        <div class="bg-blue-500 p-4 text-white text-2xl flex-col space-y-5 items-center justify-center">
+            <div class="text-center text-wrap" id="heading">PCP</div>
+            <div id="status-bar" class="flex items-center justify-between flex-wrap">
+
+                <div class="flex space-x-10 items-center justify-start flex-wrap text-sm">
+                    <div class="min-w-[100px] sm:ml-16 ml-0" id="typing">
+                    
+                    </div>
+                    <div class="min-w-[100px]" id="online-cnt">
+                        
+                    </div>
+                </div>
+
+                <div class="text-xs">
+                    <button class="text-white bg-red-500 hover:bg-red-400 px-5 py-2 rounded-md" id="exit-btn">Exit Group</button>
+                </div>
+            </div>
         </div>
         
         <!-- Chat box -->
@@ -25,7 +40,7 @@
 
         <div class="w-full flex items-center justify-center">
             <div class="bg-gray-100 p-4 flex items-center max-w-3xl grow">
-                <input type="text" placeholder="Type your message..." class="flex-1 border rounded-full px-4 py-2 focus:outline-none" id="msg">
+                <input type="text" placeholder="Type your message..." class="flex-1 border rounded-full px-4 py-2 focus:outline-none" id="msg" autofocus>
                 <button class="bg-blue-500 text-white rounded-full p-2 ml-2 hover:bg-blue-600 focus:outline-none" id="btn">
                 send
                 </button>
