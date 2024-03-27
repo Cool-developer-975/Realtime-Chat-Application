@@ -1,18 +1,18 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
+const { readFileSync } = require("fs");
 const bodyParser = require("body-parser");
 const app = express();
 const { createServer } = require("https");
 const server = createServer({
-    key: fs.readFileSync(path.join(__dirname,"cert","key.pem")),
-    cert: fs.readFileSync(path.join(__dirname,"cert","cert.pem"))
+    key: readFileSync(path.join(__dirname,"cert","key.pem")),
+    cert: readFileSync(path.join(__dirname,"cert","cert.pem"))
 },app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const port = 3000;
 const db = require("./db");
-let groups = new Map();
+let groups = new Map()
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
@@ -50,10 +50,10 @@ app.post("/joinGroup/jgrp", async (req, res)=>{
         res.status(401).json({error: response});
     }
     else if(response === "Error"){
-        res.status(401).json({error: "Something went wrong"});
+        res.status(500).json({error: "Something went wrong"});
     }
     else{
-        res.status(401).json({error: "Something went wrong"});
+        res.status(500).json({error: "Something went wrong"});
     }
 });
 
@@ -74,7 +74,7 @@ app.post("/createGroup/cgrp", async(req, res)=>{
         res.status(400).json({error: response});
     }
     else{
-        res.status(400).json({error: "Something went wrong"});
+        res.status(500).json({error: "Something went wrong"});
     }
 });
 
@@ -115,7 +115,7 @@ app.post("/signup", async (req, res) => {
         res.status(400).json({ error: result });
     }
     else if (result === "Failed to add user") {
-        res.status(400).json({ error: result });
+        res.status(500).json({ error: result });
     }
 });
 
