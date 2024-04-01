@@ -1,19 +1,11 @@
 const {Pool} = require("pg");
 
 const pool = new Pool({
-<<<<<<< HEAD
     user:process.env.POSTGRES_USER,
     host:process.env.POSTGRES_HOST,
     password:process.env.POSTGRES_PASSWORD,
     database:process.env.POSTGRES_DATABASE,
     port:process.env.POSTGRES_PORT
-=======
-    user:"postgres",
-    host:"localhost",
-    password:"your password",
-    database:"Real Time Chat Application",
-    port:5432
->>>>>>> 2c902bc968191092f86fbfe99d52f5d379c25b83
 });
 
 
